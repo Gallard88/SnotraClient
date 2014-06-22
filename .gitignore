@@ -21,3 +21,7 @@ _testmain.go
 
 *.exe
 *.test
+
+SnotraDaemon
+SnotraClient
+test
