@@ -16,7 +16,7 @@ type Msg struct {
 	Module    string
 	Date      string
 	Parameter string
-	Value     string
+	Value     float32
 }
 
 /*
@@ -47,7 +47,7 @@ func ClientReceiver(c net.Conn) {
 		if err != nil {
 			continue
 		}
-		line := fmt.Sprintf("%s, %s, %s, %s\r\n", m.Module, m.Date, m.Parameter, m.Value)
+		line := fmt.Sprintf("%s, %s, %s, %f\r\n", m.Module, m.Date, m.Parameter, m.Value)
 
 		f, err := os.OpenFile(logDir+m.Module+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 		if err == nil {
