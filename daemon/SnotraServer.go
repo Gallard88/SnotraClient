@@ -12,7 +12,7 @@ const (
 	logDir = "./"
 )
 
-type Msg struct {
+type ClientMsg struct {
 	Module    string
 	Date      string
 	Parameter string
@@ -27,7 +27,7 @@ type Msg struct {
  *
  */
 
-func ClientReceiver(c net.Conn, packets chan Msg) {
+func ClientReceiver(c net.Conn, packets chan ClientMsg) {
 	/*
 	 * Here we are connected to a specific client,
 	 * we wait until data is ready, then we unmarshal it into
@@ -42,7 +42,7 @@ func ClientReceiver(c net.Conn, packets chan Msg) {
 		}
 		data := buf[0:nr]
 
-		var m Msg
+		var m ClientMsg
 		err = json.Unmarshal(data, &m)
 		if err != nil {
 			continue
@@ -51,7 +51,7 @@ func ClientReceiver(c net.Conn, packets chan Msg) {
 	}
 }
 
-func MessageHandler(packets chan Msg) {
+func MessageHandler(packets chan ClientMsg) {
 
   /*
    * Here we grab all incoming messages and sort them.
@@ -81,7 +81,7 @@ func main() {
 
 	// Daemonise here....
 
-	incoming := make(chan Msg, 32)
+	incoming := make(chan ClientMsg, 32)
 	go MessageHandler(incoming)
 
 	for {
