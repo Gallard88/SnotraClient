@@ -4,22 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-	"os"
 )
 
 const (
 	uSock  = "/tmp/.Snotra.Socket"
-	logDir = "./"
+	LogDir = "./"
 )
 
-type ClientMsg struct {
-	Module    string
-	Date      string
-	Parameter string
-	Value     float32
-}
-
-/*
+/********************************
+ *
  * Local logger.
  * Accept Unix socket
  * Receive data whil the socket is open,
@@ -51,27 +44,9 @@ func ClientReceiver(c net.Conn, packets chan ClientMsg) {
 	}
 }
 
-func MessageHandler(packets chan ClientMsg) {
-
-  /*
-   * Here we grab all incoming messages and sort them.
-   * This is a multiplexer of sorts.
-   */
-
-	for {
-
-		m := <-packets
-		line := fmt.Sprintf("%s, %s, %s, %f\r\n", m.Module, m.Date, m.Parameter, m.Value)
-		f, err := os.OpenFile(logDir+m.Module+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-		if err == nil {
-			f.Write([]byte(line))
-			f.Close()
-		}
-	}
-}
-
 func main() {
 	fmt.Printf("Snotra Online\n")
+  MsgMux_SetLoggingDir(LogDir)
 
 	l, err := net.Listen("unixpacket", uSock)
 	if err != nil {
